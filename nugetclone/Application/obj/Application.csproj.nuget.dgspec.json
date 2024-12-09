@@ -1,0 +1,212 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Application\\Application.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Application\\Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Application\\Application.csproj",
+        "projectName": "Application",
+        "projectPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\meteb_xm3wyja\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\meteb_xm3wyja\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\Domain.csproj"
+              },
+              "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Persistence\\Persistence.csproj": {
+                "projectPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Persistence\\Persistence.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.20.0, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
+            "MediatR.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "NuGet.Packaging": {
+              "target": "Package",
+              "version": "[6.11.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\Domain.csproj",
+        "projectName": "Domain",
+        "projectPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\meteb_xm3wyja\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\meteb_xm3wyja\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Persistence\\Persistence.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Persistence\\Persistence.csproj",
+        "projectName": "Persistence",
+        "projectPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Persistence\\Persistence.csproj",
+        "packagesPath": "C:\\Users\\meteb_xm3wyja\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Persistence\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\meteb_xm3wyja\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\meteb_xm3wyja\\Desktop\\efec#proje\\nugetclone\\Domain\\Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
