@@ -45,10 +45,11 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/search", (string searchTerm, DataContext context) =>
 {
    var packages = context.NugetPackages
+   .Include(p=>p.NugetPackageVersions)
    .Where(x=>
    x.PackageName.Contains(searchTerm)||
    x.Tags.Contains(searchTerm)||
-x.Authors.Contains(searchTerm))
+   x.Authors.Contains(searchTerm))
     .Select(x=> new
     {
         x.PackageName,
@@ -58,8 +59,14 @@ x.Authors.Contains(searchTerm))
         x.FileSize,
         x.TotalDownloadCount,
         
-        x.CreatedDate
-    }).ToList();
+        x.CreatedDate,
+        Versions = x.NugetPackageVersions.Select(v => new
+            {
+                v.PackageVersion,
+                v.CurrentVersionDownloadCount,
+                
+            })
+        }).ToList();
     return Results.Ok(packages);
 });
 
