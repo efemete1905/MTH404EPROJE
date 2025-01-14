@@ -1,4 +1,5 @@
-using Application.Packages;
+using Application.Commands.Packages;
+using Application.Queries.Packages;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Components;
@@ -11,36 +12,54 @@ namespace API.Controllers
     public class NugetController : BaseApiController
     {
        //private readonly DataContext _context;
-        public NugetController(DataContext context)
+       private readonly IMediator _mediator;
+        public NugetController(IMediator Mediator)
         {
-         //   _context = context;
+         
+         _mediator = Mediator;
         }
         [HttpPost]
-        public async Task<ActionResult> CreateNugetPackage([FromForm(Name = "formFile")] IFormFile formFile)
+        public async Task<IActionResult> CreatePackage([FromForm] IFormFile formFile)
         {
-            var nugetPackage = new NugetPackage();
-            var nugetPackageVersion = new NugetPackageVersion();
-            return Ok(await Mediator.Send(new Create.Command {NugetPackage =nugetPackage, NugetPackageVersion = nugetPackageVersion,FormFile = formFile}));
+            var request = new CreatePackageCommand { FormFile = formFile };
+            try
+            {
+                await _mediator.Send(request);
+                return Ok(new { Success = true, Message = "Package created and uploaded successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
         }
-
         [HttpGet]
-        public async Task<ActionResult<List<NugetPackage>>> List()
+        public async Task<ActionResult<List<NugetPackage>>> GetAllPackages()
         {
-            return await Mediator.Send(new List.Query());
+            var query = new ListPackagesQuery();
+            var packages = await _mediator.Send(query);
+            return Ok(packages);
         }
-         [HttpPost ("update")]
-       public async Task<ActionResult> UpdateNugetPackage([FromForm(Name = "formFile")] IFormFile formFile)
+       [HttpPost("update-version")]
+        public async Task<IActionResult> UpdatePackageVersion([FromForm] IFormFile formFile)
         {
-            
-            var nugetPackage = new NugetPackage();
-            var nugetPackageVersion = new NugetPackageVersion();
-           
-            return Ok(await Mediator.Send(new UpdateVersion.Command {NugetPackage =nugetPackage, NugetPackageVersion = nugetPackageVersion,FormFile = formFile}));
+            var request = new UpdatePackageVersionCommand
+            {
+                FormFile = formFile
+            };
+            try
+            {
+                await _mediator.Send(request);
+                return Ok(new { Success = true, Message = "Package version updated and uploaded successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message });
+            }
         }
         [HttpGet("download/{packageName}/{packageVersion}")]
-        public async Task<ActionResult<NugetPackage>> Download(string packageName , string packageVersion)
+        public async Task<ActionResult<NugetPackage>> Download(string packageName, string packageVersion)
         {
-            return await Mediator.Send(new DownloadNuget.Query {PackageName = packageName, PackageVersion = packageVersion});
+            return await _mediator.Send(new DownloadPackageQuery { PackageName = packageName, PackageVersion = packageVersion });
         }
     }
 }
@@ -51,5 +70,5 @@ namespace API.Controllers
        
        
         
-    //}
-//} 
+
+ 

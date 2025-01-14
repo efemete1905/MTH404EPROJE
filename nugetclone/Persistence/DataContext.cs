@@ -9,6 +9,7 @@ namespace Persistence
         {
         }
 
+        // DbSet Properties
         public DbSet<NugetPackage> NugetPackages { get; set; }
         public DbSet<NugetPackageVersion> NugetPackageVersions { get; set; }
 
@@ -16,54 +17,61 @@ namespace Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            // NugetPackage tablosu için yapılandırmalar
+            ConfigureNugetPackageEntity(modelBuilder);
+            ConfigureNugetPackageVersionEntity(modelBuilder);
+        }
+
+        private static void ConfigureNugetPackageEntity(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<NugetPackage>(entity =>
             {
-                entity.HasKey(e => e.NugetPackageId); // Primary key
+                // Primary Key
+                entity.HasKey(e => e.NugetPackageId);
 
+                // Properties
                 entity.Property(e => e.PackageName)
                     .IsRequired()
-                    .HasMaxLength(100); // PaketId alanı zorunlu ve maksimum 100 karakter
-
-                 
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Authors)
-                    .HasMaxLength(200); // Authors alanı maksimum 200 karakter
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.Tags)
-                    .HasMaxLength(200); // Tags alanı maksimum 200 karakter
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.FileSize)
-                    .HasMaxLength(50); // FileSize alanı maksimum 50 karakter
-
-               
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.TotalDownloadCount)
-                    .IsRequired(); // TotalDownloadCount alanı zorunlu
+                    .IsRequired();
 
                 entity.Property(e => e.CreatedDate)
-                    .IsRequired(); // CreatedDate alanı zorunlu
+                    .IsRequired();
 
-                // One-to-Many ilişki
+                // Relationships
                 entity.HasMany(e => e.NugetPackageVersions)
                     .WithOne(v => v.NugetPackage)
                     .HasForeignKey(v => v.NugetPackageId);
             });
+        }
 
-            // NugetPackageVersion tablosu için yapılandırmalar
+        private static void ConfigureNugetPackageVersionEntity(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<NugetPackageVersion>(entity =>
             {
-                entity.HasKey(e => e.VersionId); // Primary key
+                // Primary Key
+                entity.HasKey(e => e.VersionId);
 
+                // Properties
                 entity.Property(e => e.PackageVersion)
                     .IsRequired()
-                    .HasMaxLength(50); // PaketVersiyon alanı zorunlu ve maksimum 50 karakter
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.CurrentVersionDownloadCount)
-                    .IsRequired(); // CurrentVersionDownloadCount alanı zorunlu
+                    .IsRequired();
 
                 entity.Property(e => e.NugetPackageId)
-                    .IsRequired(); // NugetPackageId alanı zorunlu
+                    .IsRequired();
             });
         }
     }
