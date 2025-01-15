@@ -1,3 +1,4 @@
+using Application.Core;
 using Azure.Storage.Blobs;
 using Domain;
 using MediatR;
@@ -5,12 +6,13 @@ using NuGet.Packaging;
 using Persistence;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Commands.Packages
 {
-    public class CreatePackageCommandHandler : IRequestHandler<CreatePackageCommand, Unit>
+    public class CreatePackageCommandHandler : IRequestHandler<CreatePackageCommand, Result<Unit>>
     {
         private readonly DataContext _context;
         private readonly BlobServiceClient _blobServiceClient;
@@ -21,11 +23,15 @@ namespace Application.Commands.Packages
             _blobServiceClient = blobServiceClient;
         }
 
-        public async Task<Unit> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
         {
-            if (request.FormFile != null && Path.GetExtension(request.FormFile.FileName) == ".nupkg")
+            if (request.FormFile == null || Path.GetExtension(request.FormFile.FileName) != ".nupkg")
             {
-                // NuGet paketini açmak için PackageArchiveReader kullanılıyor
+                return Result<Unit>.Failure("Invalid package file format. Only .nupkg files are allowed.");
+            }
+
+            try
+            {
                 using (var stream = request.FormFile.OpenReadStream())
                 {
                     var reader = new PackageArchiveReader(stream);
@@ -36,6 +42,15 @@ namespace Application.Commands.Packages
                     var authors = nuspecReader.GetAuthors();
                     var tags = nuspecReader.GetTags();
                     var name = nuspecReader.GetIdentity().Id;
+
+                    // Mevcut bir paket olup olmadığını kontrol et
+                    var existingPackage = _context.NugetPackages
+                        .FirstOrDefault(p => p.PackageName == name);
+
+                    if (existingPackage != null)
+                    {
+                        return Result<Unit>.Failure($"A package with the name '{name}' already exists. Did you mean to update it?");
+                    }
 
                     var nugetPackage = new NugetPackage
                     {
@@ -66,11 +81,13 @@ namespace Application.Commands.Packages
                     var blobClient = containerClient.GetBlobClient(request.FormFile.FileName);
                     await blobClient.UploadAsync(stream, true);
 
-                    return Unit.Value;
+                    return Result<Unit>.Success(Unit.Value);
                 }
             }
-
-            throw new Exception("Invalid package file.");
+            catch (Exception ex)
+            {
+                return Result<Unit>.Failure($"An error occurred while creating the package: {ex.Message}");
+            }
         }
     }
 }

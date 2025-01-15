@@ -5,10 +5,11 @@ using Persistence;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 
 namespace Application.Queries.Packages
 {
-    public class GetAllPackagesQueryHandler : IRequestHandler<ListPackagesQuery, List<NugetPackage>>
+    public class GetAllPackagesQueryHandler : IRequestHandler<ListPackagesQuery, Result<List<NugetPackage>>>
     {
         private readonly DataContext _context;
 
@@ -17,11 +18,20 @@ namespace Application.Queries.Packages
             _context = context;
         }
 
-        public async Task<List<NugetPackage>> Handle(ListPackagesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<NugetPackage>>> Handle(ListPackagesQuery request, CancellationToken cancellationToken)
         {
-            return await _context.NugetPackages
-                .Include(p => p.NugetPackageVersions) // İlişkili NugetPackageVersion nesnelerini yükle
-                .ToListAsync(cancellationToken);
+            try
+            {
+                var packages = await _context.NugetPackages
+                    .Include(p => p.NugetPackageVersions) // İlişkili NugetPackageVersion nesnelerini yükle
+                    .ToListAsync(cancellationToken);
+
+                return Result<List<NugetPackage>>.Success(packages);
+            }
+            catch (Exception ex)
+            {
+                return Result<List<NugetPackage>>.Failure($"An error occurred while retrieving packages: {ex.Message}");
+            }
         }
     }
 }

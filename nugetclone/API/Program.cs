@@ -5,6 +5,7 @@ using Application;
 using Azure.Storage.Blobs;
 using System.Text.Json.Serialization;
 using DotNetEnv;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,7 +63,10 @@ void ConfigureMiddleware(WebApplication app)
     }
 
     app.UseHttpsRedirection();
+    
     app.UseAuthorization();
+    
+    app.UseMiddleware<ExceptionMiddleware>();
 
     app.MapControllers();
 

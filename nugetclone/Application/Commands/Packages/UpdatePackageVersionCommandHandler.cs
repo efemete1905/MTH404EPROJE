@@ -10,10 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 
 namespace Application.Commands.Packages
 {
-    public class UpdatePackageVersionCommandHandler : IRequestHandler<UpdatePackageVersionCommand>
+    public class UpdatePackageVersionCommandHandler : IRequestHandler<UpdatePackageVersionCommand, Result<Unit>>
     {
         private readonly DataContext _context;
         private readonly BlobServiceClient _blobServiceClient;
@@ -24,7 +25,7 @@ namespace Application.Commands.Packages
             _blobServiceClient = blobServiceClient;
         }
 
-        public async Task<Unit> Handle(UpdatePackageVersionCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(UpdatePackageVersionCommand request, CancellationToken cancellationToken)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient("nugetpackages");
 
@@ -44,7 +45,7 @@ namespace Application.Commands.Packages
 
             if (oldNugetPackages == null || oldNugetPackages.Count == 0)
             {
-                throw new InvalidOperationException("Update Edilecek Paket Bulunamadı");
+                return Result<Unit>.Failure("Update Edilecek Paket Bulunamadı");
             }
 
             using (var stream = request.FormFile.OpenReadStream())
@@ -60,6 +61,15 @@ namespace Application.Commands.Packages
 
                 foreach (var oldNugetPackage in oldNugetPackages)
                 {
+                    // Aynı versiyon olup olmadığını kontrol et
+                    var existingVersion = oldNugetPackage.NugetPackageVersions
+                        .FirstOrDefault(v => v.PackageVersion == version);
+
+                    if (existingVersion != null)
+                    {
+                        return Result<Unit>.Failure($"A package with the name '{name}' and version '{version}' already exists. Update aborted.");
+                    }
+
                     oldNugetPackage.Authors = authors;
                     oldNugetPackage.Tags = tags;
 
@@ -81,7 +91,7 @@ namespace Application.Commands.Packages
                 await blobClient.UploadAsync(stream, true);
             }
 
-            return Unit.Value;
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }
