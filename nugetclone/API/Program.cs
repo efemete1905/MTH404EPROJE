@@ -6,6 +6,8 @@ using Azure.Storage.Blobs;
 using System.Text.Json.Serialization;
 using DotNetEnv;
 using API.Middleware;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,13 +50,14 @@ void ConfigureServices(WebApplicationBuilder builder)
     // Add MediatR
     builder.Services.AddMediatR(typeof(Application.Commands.Packages.CreatePackageCommandHandler).Assembly);
 
-    // Configure Blob Storage
-    var blobStorageConnectionString = Environment.GetEnvironmentVariable("BlobStorageConnectionString");
-    var blobServiceClient = new BlobServiceClient(blobStorageConnectionString);
+    // Configure Blob Storage using SAS token
+    string blobServiceEndpoint = "https://mynugetpackages.blob.core.windows.net/nugetpackages";
+    string sasToken = "sp=racwdli&st=2025-01-15T23:05:38Z&se=2025-02-16T07:05:38Z&spr=https&sv=2022-11-02&sr=c&sig=Z6VmLuBp5kzYzT9DY3X96R36WiBVUbCmt9w4XF7J57U%3D";
+    var blobServiceClient = new BlobServiceClient(new Uri($"{blobServiceEndpoint}?{sasToken}"));
     builder.Services.AddSingleton(blobServiceClient);
 }
 
-void ConfigureMiddleware(WebApplication app)
+async Task ConfigureMiddleware(WebApplication app)
 {
     if (app.Environment.IsDevelopment())
     {
@@ -69,6 +72,18 @@ void ConfigureMiddleware(WebApplication app)
     app.UseMiddleware<ExceptionMiddleware>();
 
     app.MapControllers();
+
+    using var scope=app.Services.CreateScope();
+    var services=scope.ServiceProvider;
+
+    try{
+        var context=services.GetRequiredService<DataContext>();
+        await context.Database.MigrateAsync();
+        await Seed.SeedData(context);
+    }catch(Exception ex){
+        var logger=services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex,"An error occured during migration");
+    }
 
     // Define custom endpoints
     app.MapGet("/search", (string searchTerm, DataContext context) =>
